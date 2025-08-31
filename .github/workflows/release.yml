@@ -7,7 +7,7 @@ permissions:
   contents: read
 
 jobs:
-  create-release-notes:
+  build-apk-and-sign:
     # Release Note作成のために必要
     permissions:
       contents: write
@@ -62,19 +62,22 @@ jobs:
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk.sig
 
   provenance:
-    needs: [create-release-notes]
+    needs: [build-apk-and-sign]
     permissions:
       actions: read
       id-token: write
       contents: write
     uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0
     with:
-      base64-subjects: "${{ needs.create-release-notes.outputs.hashes }}"
+      base64-subjects: "${{ needs.build-apk-and-sign.outputs.hashes }}"
+      # Release Noteを自動背作成しmultiple.intoto.jsonlを添付
+      # この時点ではDraftでなく後続のStepでDraftに戻す
+      # falseにして手動制御したほうがよい
       upload-assets: true
       upload-tag-name: ${{ github.ref_name }}
 
   create-draft-release:
-    needs: [create-release-notes, provenance]
+    needs: [build-apk-and-sign, provenance]
     runs-on: ubuntu-latest
     permissions:
       contents: write
