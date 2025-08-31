@@ -27,4 +27,12 @@ We consider the following as security vulnerabilities:
 - Remote code execution
 - Denial of service attacks
 
+## Out of Scope
+
+The following are not considered security vulnerabilities for the purposes of this policy:
+- Reports from automated scanners without a proof-of-concept demonstrating a specific vulnerability.
+- Self-XSS (user-based cross-site scripting) that does not affect other users.
+- Issues related to software or protocols not under our control.
+- Missing security best practices (e.g., missing security headers) that do not lead to a direct, exploitable vulnerability.
+
 Thank you for helping keep our project and users safe.
